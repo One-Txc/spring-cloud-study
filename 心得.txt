@@ -1,0 +1,14 @@
+
+
+RestTemplate        ---Rest风格请求类，理解为一个特殊的浏览器或postman
+
+抽象层：
+org.springframework.cloud.client.discovery.DiscoveryClient                      ---服务发现接口，获取ServiceInstance实例
+org.springframework.cloud.client.ServiceInstance                                ---服务实例接口，获取服务的相关信息
+org.springframework.cloud.client.loadbalancer.ServiceInstanceChooser            ---服务选择接口，获取ServiceInstance实例。类似DiscoveryClient吧
+org.springframework.cloud.client.loadbalancer.LoadBalancerClient                ---继承ServiceInstanceChooser，实现负载均衡获取ServiceInstance实例。和一些其他接口
+
+
+
+
+
