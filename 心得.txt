@@ -1,6 +1,8 @@
 
 
 RestTemplate        ---Rest风格请求类，理解为一个特殊的浏览器或postman
+@FeignClient感觉有点类似mybatis的样子
+
 
 抽象层：
 org.springframework.cloud.client.discovery.DiscoveryClient                      ---服务发现接口，获取ServiceInstance实例
