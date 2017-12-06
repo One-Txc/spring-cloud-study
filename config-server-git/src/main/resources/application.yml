@@ -10,3 +10,7 @@ spring:
           uri: https://github.com/One-Txc/config-server.git/
 server:
   port: 8000
+
+management:
+  security:
+    enabled: false
