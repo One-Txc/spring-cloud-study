@@ -14,3 +14,29 @@ org.springframework.cloud.client.loadbalancer.LoadBalancerClient                
 
 
 
+“舱壁模式”对于熟悉Docker的读者一定不陌生，Docker通过“舱壁模式”实现进程的隔离，使得容器与容器之间不会互相影响。而Hystrix则使用该模式实现线程池的隔离，
+它会为每一个Hystrix命令创建一个独立的线程池，这样就算某个在Hystrix命令包装下的依赖服务出现延迟过高的情况，也只是对该依赖服务的调用产生影响，而不会拖慢其他的服务。
+
+---不共用线程池，这样当一个高延迟的Hystrix命令注解的服务被大量并发访问时，只有那个线程池的线程被占用。别的线程池不受影响。
+例子：
+
+    //长耗时
+    @HystrixCommand(fallbackMethod = "fallback")
+    public String longTimeService(){
+        Thread.sleep(50000L);
+        return restTemplate.getForObject("http://eureka-client/dc", String.class);
+    }
+    //短耗时
+    @HystrixCommand(fallbackMethod = "fallback")
+    public String shortTimeService(){
+        return restTemplate.getForObject("http://eureka-client/dc", String.class);
+    }
+
+    以上2个被@HystrixCommand注解的服务。当遇到高并发访问时
+    情况1:如果共用线程池(10个线程)
+        短耗时服务 会花大量的时间等待 长耗时服务跑完释放线程。－－－每个服务的话费时间大概等于平均耗时
+    情况2:如果为每一个Hystrix命令创建一个独立的线程池(5个线程)
+        短耗时服务  会很快执行完成，不需要等待长耗时服务
+        长耗时服务  会需要 情况1中的2倍时间                －－－但是不回影响短耗时服务
+
+    总结：虽然（情况2）平均耗时可能会更多，但是不回使服务互相影响，造成全局的服务变慢。对于高耗时的服务应该做其他的优化
