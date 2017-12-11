@@ -40,3 +40,14 @@ org.springframework.cloud.client.loadbalancer.LoadBalancerClient                
         长耗时服务  会需要 情况1中的2倍时间                －－－但是不回影响短耗时服务
 
     总结：虽然（情况2）平均耗时可能会更多，但是不回使服务互相影响，造成全局的服务变慢。对于高耗时的服务应该做其他的优化
+
+
+RibbonRoutingFilter.run()逻辑
+.过滤器的核心逻辑run函数实现，其中调用了内部函数buildCommandContext来构建上下文内容
+.而buildCommandContext中调用了helper对象的buildZuulRequestHeaders方法来处理请求头信息
+.helper对象是ProxyRequestHelper类的实例]
+
+
+mvn 下载源码命令(有时idea下载源码提示找不到)
+        mvn dependency:resolve -Dclassifier=sources             －－－下载了所有POM里的依赖包的source
+        mvn dependency:sources -DincludeArtifactIds=guava       －－－下载指定依赖包（artifactId）的source。这个很不错，是我想要的。
